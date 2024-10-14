@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react'
 import Link from 'next/link'
 
-export default function NewAgent() {
+export default function NewUnit() {
     const router = useRouter()
     const [theme, setTheme] = useState('light')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -181,7 +181,7 @@ export default function NewAgent() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="unit" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Units <span className="text-red-500">*</span>
                   </label>
                   <input
