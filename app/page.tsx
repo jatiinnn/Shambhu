@@ -1,24 +1,53 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Moon, Sun, ChevronDown, ChevronRight, Menu } from 'lucide-react'
 import Link from 'next/link'
+import { auth } from '../firebase/config'
+import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 
 export default function Dashboard() {
   const [theme, setTheme] = useState('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light'
     setTheme(savedTheme)
     document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-  }, [])
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser)
+        setIsAuthenticated(true)
+      } else {
+        setUser(null)
+        setIsAuthenticated(false)
+        router.push('/auth')
+      }
+    })
+
+    return () => unsubscribe()
+  }, [router])
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
     localStorage.setItem('theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      localStorage.removeItem('user')
+      router.push('/auth')
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
   }
 
   const menuItems = [
@@ -65,6 +94,10 @@ export default function Dashboard() {
       ]
     }
   ]
+
+  if (!isAuthenticated) {
+    return null // or a loading spinner
+  }
 
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
@@ -114,6 +147,12 @@ export default function Dashboard() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <Menu size={24} />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Logout
             </button>
           </div>
         </div>
