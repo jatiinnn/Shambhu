@@ -11,13 +11,13 @@ export default function Dashboard() {
   const [theme, setTheme] = useState('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
+  const [user,setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light'
     setTheme(savedTheme)
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -48,6 +48,10 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Logout error:', error)
     }
+  }
+
+  if (!user) {
+    return null // or a loading spinner
   }
 
   const menuItems = [

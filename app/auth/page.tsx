@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react'
 import { auth } from '../../firebase/config'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, AuthError } from 'firebase/auth'
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true)
@@ -39,17 +39,18 @@ export default function Auth() {
       }
       localStorage.setItem('user', 'true')
       router.push('/')
-    } catch (error: any) {
-      console.error('Authentication error:', error)
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        setError('Invalid email or password')
-      } else if (error.code === 'auth/email-already-in-use') {
-        setError('Email is already in use')
-      } else {
-        setError('An error occurred. Please try again.')
+    } catch (error) {
+        console.error('Authentication error:', error)
+        const authError = error as AuthError
+        if (authError.code === 'auth/user-not-found' || authError.code === 'auth/wrong-password') {
+          setError('Invalid email or password')
+        } else if (authError.code === 'auth/email-already-in-use') {
+          setError('Email is already in use')
+        } else {
+          setError('An error occurred. Please try again.')
+        }
       }
-    }
-  }
+    }   
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 py-12 px-4 sm:px-6 lg:px-8">
