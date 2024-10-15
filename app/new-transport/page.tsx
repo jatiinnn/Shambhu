@@ -93,7 +93,9 @@ export default function NewTransport() {
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
       <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+        <Link href="/" className="text-2xl font-bold hover:text-white transition-colors duration-200">
+            Dashboard
+          </Link>
           <nav className="hidden md:flex flex-grow justify-center">
             <div className="relative group">
               <button className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200">
