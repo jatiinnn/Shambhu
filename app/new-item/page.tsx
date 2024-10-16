@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu, Search } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function NewItem() {
@@ -114,11 +115,12 @@ export default function NewItem() {
 
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-      <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-        <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold hover:text-white transition-colors duration-200">
-            Dashboard
-          </Link>
+    <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+          <Image src="/favicon.ico" alt="DDSoft Logo" width={40} height={40} />
+          <span className="text-2xl font-bold">DDSoft</span>
+        </Link>
           <nav className="hidden md:flex flex-grow justify-center">
             <div className="relative group">
               <button className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200">
@@ -211,14 +213,14 @@ export default function NewItem() {
           <div className="space-y-4">
             <div>
               <label htmlFor="itemName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                *Item Name
+                Item Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 id="itemName"
                 name="itemName"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.itemName}
                 onChange={handleInputChange}
               />
@@ -233,7 +235,7 @@ export default function NewItem() {
                   id="hsnCode"
                   name="hsnCode"
                   placeholder="Search HSN Form..."
-                  className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   value={formData.hsnCode}
                   onChange={handleInputChange}
                 />
@@ -247,7 +249,7 @@ export default function NewItem() {
                   name="showItemTypes"
                   checked={formData.showItemTypes}
                   onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 "
                 />
                 <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Add Item Types</span>
               </label>
@@ -261,7 +263,7 @@ export default function NewItem() {
                     type="text"
                     value={itemType}
                     onChange={(e) => updateItemType(index, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="Item Type"
                   />
                 ))}
@@ -294,7 +296,7 @@ export default function NewItem() {
                   name="designCode"
                   value={formData.designCode}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Design Code"
                 />
                 <input
@@ -302,7 +304,7 @@ export default function NewItem() {
                   name="unit"
                   value={formData.unit}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Unit"
                 />
                 <button
@@ -333,7 +335,7 @@ export default function NewItem() {
                   name="size1"
                   value={formData.size1}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Size 1"
                 />
                 <input
@@ -341,7 +343,7 @@ export default function NewItem() {
                   name="size2"
                   value={formData.size2}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Size 2"
                 />
                 <button
@@ -357,7 +359,7 @@ export default function NewItem() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
             >
               Cancel
             </button>

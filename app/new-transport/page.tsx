@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function NewTransport() {
@@ -91,11 +92,12 @@ export default function NewTransport() {
 
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-      <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-        <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold hover:text-white transition-colors duration-200">
-            Dashboard
-          </Link>
+    <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+          <Image src="/favicon.ico" alt="DDSoft Logo" width={40} height={40} />
+          <span className="text-2xl font-bold">DDSoft</span>
+        </Link>
           <nav className="hidden md:flex flex-grow justify-center">
             <div className="relative group">
               <button className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200">
@@ -195,7 +197,7 @@ export default function NewTransport() {
                 id="transportName"
                 name="transportName"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.transportName}
                 onChange={handleInputChange}
               />
@@ -208,7 +210,7 @@ export default function NewTransport() {
                 type="tel"
                 id="phoneNo"
                 name="phoneNo"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.phoneNo}
                 onChange={handleInputChange}
               />
@@ -221,7 +223,7 @@ export default function NewTransport() {
                 id="address"
                 name="address"
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.address}
                 onChange={handleInputChange}
               ></textarea>
@@ -234,7 +236,7 @@ export default function NewTransport() {
                 type="text"
                 id="city"
                 name="city"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 value={formData.city}
                 onChange={handleInputChange}
               />
@@ -247,7 +249,7 @@ export default function NewTransport() {
                 <select
                   id="state"
                   name="state"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   value={formData.state}
                   onChange={handleInputChange}
                 >
@@ -263,7 +265,7 @@ export default function NewTransport() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
             >
               Cancel
             </button>

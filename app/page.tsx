@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Moon, Sun, ChevronDown, ChevronRight, Menu } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { auth } from '../firebase/config'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 
@@ -105,11 +106,12 @@ export default function Dashboard() {
 
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-      <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-        <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold hover:text-white transition-colors duration-200">
-            Dashboard
-          </Link>
+    <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+          <Image src="/favicon.ico" alt="DDSoft Logo" width={40} height={40} />
+          <span className="text-2xl font-bold">DDSoft</span>
+        </Link>
           <nav className="flex-grow flex justify-center">
             <ul className="flex space-x-4">
               <li className="relative group">
@@ -191,9 +193,9 @@ export default function Dashboard() {
 
       <main className="flex-grow bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
         <div className="container mx-auto py-8 px-4">
-          <h2 className="text-3xl font-bold text-center mb-4 text-gray-800 dark:text-white">Welcome to Your Dashboard</h2>
+          <h2 className="text-3xl font-bold text-center mb-4 text-gray-800 dark:text-white">Dashboard</h2>
           <p className="text-center text-gray-600 dark:text-gray-300">
-            This is a responsive web application built with Next.js, TypeScript, and Tailwind CSS.
+            Welcome to your DDSoft dashboard. Manage your billing and invoices with ease.
           </p>
         </div>
       </main>
