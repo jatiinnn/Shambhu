@@ -1,18 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react'
+import { db } from '../../firebase/config'
 import Image from 'next/image'
 import Link from 'next/link'
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function NewUnit() {
-    const router = useRouter()
+    // const router = useRouter()
     const [theme, setTheme] = useState('light')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [formData, setFormData] = useState({
-    unit: ''
-    })
+    const [formData, setFormData] = useState({unit: ''})
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'light'
@@ -22,17 +22,24 @@ export default function NewUnit() {
     
       const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
-        setFormData(prevData => ({
-          ...prevData,
-          [name]: value
-        }))
+        setFormData(prevData => ({...prevData,[name]: value}))
       }
     
-      const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log('Form submitted:', formData)
-        // Here you would typically send the data to your backend
-      }
+      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log('Form submitted:', formData); // Check form data
+        try {
+            const docRef = await addDoc(collection(db, 'Unit'), { unit: formData.unit });
+            console.log('Document written with ID: ', docRef.id); // Log the document ID
+            setFormData({ unit: '' }); // Reset the form after submission
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+      };
+
+      const handleCancel = () => {
+        setFormData({ unit: '' }); // Reset the form on cancel
+      };
     
       const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light'
@@ -88,12 +95,12 @@ export default function NewUnit() {
     
       return (
         <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-    <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-          <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
-          <span className="text-2xl font-bold">DDSoft</span>
-        </Link>
+          <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+            <div className="container mx-auto flex justify-between items-center">
+              <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+                <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
+                  <span className="text-2xl font-bold">DDSoft</span>
+              </Link>
               <nav className="hidden md:flex flex-grow justify-center">
                 <div className="relative group">
                   <button className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200">
@@ -202,7 +209,7 @@ export default function NewUnit() {
      <div className="mt-6 flex justify-end space-x-3">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={handleCancel}
               className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
             >
               Cancel
@@ -212,12 +219,6 @@ export default function NewUnit() {
               className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Save
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              Save & New
             </button>
           </div>
         </form>

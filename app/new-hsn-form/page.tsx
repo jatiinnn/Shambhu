@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react'
+import { db } from '../../firebase/config'
 import Image from 'next/image'
 import Link from 'next/link'
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function NewHSNForm() {
-    const router = useRouter()
+    // const router = useRouter()
     const [theme, setTheme] = useState('light')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [formData, setFormData] = useState({
@@ -29,10 +31,26 @@ export default function NewHSNForm() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
-    // Here you would typically send the data to your backend
+
+    try {
+      // Convert GST to string before saving to Firebase
+      const gstString = formData.gst.toString();
+      await addDoc(collection(db, 'HSN'), {
+        hsnCode: formData.hsnCode,
+        gst: gstString,
+      });
+      // Optionally reset form data after successful submission
+      setFormData({ hsnCode: '', gst: '' });
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  }
+
+  const handleCancel = () => {
+    setFormData({ hsnCode: '', gst: '' }); // Reset form data
   }
 
   const toggleTheme = () => {
@@ -216,7 +234,7 @@ export default function NewHSNForm() {
           <div className="mt-6 flex justify-end space-x-3">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={handleCancel}
               className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
             >
               Cancel
@@ -226,12 +244,6 @@ export default function NewHSNForm() {
               className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Save
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              Save & New
             </button>
           </div>
         </form>
