@@ -100,7 +100,7 @@ export default function NewAgent() {
     <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-          <Image src="/favicon.ico" alt="DDSoft Logo" width={40} height={40} />
+          <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
           <span className="text-2xl font-bold">DDSoft</span>
         </Link>
           <nav className="hidden md:flex flex-grow justify-center">

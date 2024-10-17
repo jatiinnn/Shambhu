@@ -52,7 +52,7 @@ export default function Auth() {
           <div className="flex justify-center mb-4">
             <div className="relative w-20 h-20 group">
               <Image
-                src="/favicon.ico"
+                src="/logo.png"
                 alt="DDSoft Logo"
                 layout="fill"
                 objectFit="contain"
