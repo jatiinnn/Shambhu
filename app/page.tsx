@@ -7,18 +7,19 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { auth } from '../firebase/config'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
+import { link } from 'fs'
 
 export default function Dashboard() {
   const [theme, setTheme] = useState('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user,setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light'
     setTheme(savedTheme)
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark')
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -106,16 +107,18 @@ export default function Dashboard() {
 
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-    <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-          <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
-          <span className="text-2xl font-bold">DDSoft</span>
-        </Link>
+      <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+            <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
+            <span className="text-2xl font-bold">DDSoft</span>
+          </Link>
           <nav className="flex-grow flex justify-center">
             <ul className="flex space-x-4">
+
+              {/* Master menu */}
               <li className="relative group">
-                <div 
+                <div
                   className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
                 >
                   <span>Master</span>
@@ -131,7 +134,7 @@ export default function Dashboard() {
                       <ul className="absolute left-full top-0 mt-0 ml-1 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 opacity-0 invisible group-hover/item:opacity-100 group-hover/item:visible transition-all duration-300 ease-in-out">
                         {item.subItems.map((subItem, subIndex) => (
                           <li key={subIndex}>
-                            <Link 
+                            <Link
                               href={subItem.link}
                               className="block px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-300"
                             >
@@ -144,13 +147,176 @@ export default function Dashboard() {
                   ))}
                 </ul>
               </li>
+
+              {/* Sales menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Sales</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/sales-order"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Sales Order
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/sale"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Sale
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/sales-return"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Sales Return
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/sales-pending-order"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Pending Order
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Purchase menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Purchase</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/purchase-order"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Purchase Order
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/purchase"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Purchase
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/purchase-return"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Purchase Return
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/purchase-pending-order"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Pending Order
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Report menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Report</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/sales-register"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Sales Register
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/purchase-register"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Purchase Register
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/ledger-report"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Ledger Report
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/outstanding"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Outstanding
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/stock"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Stock
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/item-ledger"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Item Ledger
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Account menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Account</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/payment"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Payment
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/receipt"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Receipt
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Setting menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Settings</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/change-password"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Change Password
+                    </Link>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </nav>
+
           <div className="flex items-center space-x-4">
             <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-white/20">
               {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
             </button>
-            <button 
+            <button
               className="md:hidden p-2 rounded-full hover:bg-white/20"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -176,7 +342,7 @@ export default function Dashboard() {
                 <ul className="ml-4 mt-1">
                   {item.subItems.map((subItem, subIndex) => (
                     <li key={subIndex}>
-                      <Link 
+                      <Link
                         href={subItem.link}
                         className="block py-1 hover:text-blue-500 dark:hover:text-blue-300"
                       >
