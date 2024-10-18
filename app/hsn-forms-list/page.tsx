@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react';
 import { db } from '../../firebase/config';
 import Link from 'next/link';
-import Image from 'next/image'
+import Image from 'next/image';
 import { collection, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 
 // Define the HSN type
