@@ -352,10 +352,10 @@ export default function NewTransport() {
                 </div>
               </div>
               <div className="mt-6 flex justify-end space-x-3">
-                <button
+              <button
                   type="button"
                   onClick={handleCancel}
-                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
                 >
                   Cancel
                 </button>

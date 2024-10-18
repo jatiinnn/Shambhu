@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react';
 import { db } from '../../firebase/config';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ interface Agent {
 }
 
 export default function AgentList() {
-    const router = useRouter();
+    // const router = useRouter();
     const [theme, setTheme] = useState('light');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [agentList, setAgentList] = useState<Agent[]>([]);
