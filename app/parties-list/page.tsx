@@ -130,21 +130,63 @@ export default function PartiesList() {
 
   const handleUpdate = async () => {
     try {
-      const partyRef = doc(db, 'Party', partyData.id)
-      const updateData = Object.entries(partyData).reduce((acc, [key, value]) => {
-        if (key !== 'id') {
-          acc[key] = value
-        }
-        return acc
-      }, {} as { [key: string]: any })
-      await updateDoc(partyRef, updateData)
-      setPartyList(partyList.map(p => (p.id === partyData.id ? partyData : p)))
-      setFilteredPartyList(filteredPartyList.map(p => (p.id === partyData.id ? partyData : p)))
-      setExpandedPartyId(null)
+      const partyRef = doc(db, 'Party', partyData.id);
+      await updateDoc(partyRef, {
+        code: partyData.code,
+        partyName: partyData.partyName,
+        group: partyData.group,
+        address: partyData.address,
+        city: partyData.city,
+        state: partyData.state,
+        phoneNo: partyData.phoneNo,
+        email: partyData.email,
+        agent: partyData.agent,
+        gst: partyData.gst,
+        transport: partyData.transport,
+        openingType1: partyData.openingType1,
+        openingDate1: partyData.openingDate1,
+        openingBalance1: partyData.openingBalance1,
+        discount1: partyData.discount1,
+        closingBalance: partyData.closingBalance,
+        openingType2: partyData.openingType2,
+        openingDate2: partyData.openingDate2,
+        openingBalance2: partyData.openingBalance2,
+        discount2: partyData.discount2,
+        privateMarka: partyData.privateMarka,
+      });
+      const updatedList = partyList.map(p => (p.id === partyData.id ? partyData : p));
+      setPartyList(updatedList);
+      setFilteredPartyList(updatedList);
+      setPartyData({
+        id: '',
+        code: '',
+        partyName: '',
+        group: '',
+        address: '',
+        city: '',
+        state: '',
+        phoneNo: '',
+        email: '',
+        agent: '',
+        gst: '',
+        transport: '',
+        openingType1: '',
+        openingDate1: '',
+        openingBalance1: '',
+        discount1: '',
+        closingBalance: '',
+        openingType2: '',
+        openingDate2: '',
+        openingBalance2: '',
+        discount2: '',
+        privateMarka: ''
+      });
+      setExpandedPartyId(null);
     } catch (error) {
-      console.error("Error updating party record: ", error)
+      console.error("Error updating party record: ", error);
     }
   }
+
 
   const handleDelete = async (id: string) => {
     try {
