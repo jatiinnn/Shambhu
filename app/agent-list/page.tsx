@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
-import { ChevronDown, Moon, Sun, Menu } from 'lucide-react';
+import { ChevronDown, Moon, Sun, Menu, Search } from 'lucide-react';
 import { db } from '../../firebase/config';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -28,7 +28,9 @@ export default function AgentList() {
     const [theme, setTheme] = useState('light');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [agentList, setAgentList] = useState<Agent[]>([]);
+    const [filteredAgentList, setFilteredAgentList] = useState<Agent[]>([])
     const [expandedAgentId, setExpandedAgentId] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('')
     const [agentData, setAgentData] = useState<Agent>({
         id: '',
         name: '',
@@ -53,6 +55,7 @@ export default function AgentList() {
                 const data = await getDocs(collection(db, 'Agent'));
                 const agents: Agent[] = data.docs.map(doc => ({ id: doc.id, ...doc.data() } as Agent));
                 setAgentList(agents);
+                setFilteredAgentList(agents);
             } catch (error) {
                 console.error("Error fetching agents: ", error);
             }
@@ -100,7 +103,9 @@ export default function AgentList() {
                 openingDate: agentData.openingDate,
                 closingBalance: agentData.closingBalance,
             });
-            setAgentList(agentList.map(a => (a.id === agentData.id ? agentData : a)));
+            const updatedList = agentList.map(a => (a.id === agentData.id ? agentData : a));
+            setAgentList(updatedList);
+            setFilteredAgentList(updatedList);
             setAgentData({
                 id: '',
                 name: '',
@@ -124,11 +129,25 @@ export default function AgentList() {
         try {
             const agentRef = doc(db, 'Agent', id);
             await deleteDoc(agentRef);
-            setAgentList(agentList.filter(a => a.id !== id));
+            const updatedList = agentList.filter(a => a.id !== id);
+            setAgentList(updatedList);
+            setFilteredAgentList(updatedList);
         } catch (error) {
             console.error("Error deleting agent record: ", error);
         }
     };
+
+    const handleSearch = () => {
+        if (searchQuery.trim() === '') {
+            setFilteredAgentList(agentList);
+        } else {
+            const filtered = agentList.filter(agent =>
+                agent.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredAgentList(filtered);
+        }
+    };
+
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -185,12 +204,12 @@ export default function AgentList() {
 
     return (
         <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
-          <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-            <div className="container mx-auto flex justify-between items-center">
-              <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-                <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
-                  <span className="text-2xl font-bold">DDSoft</span>
-              </Link>
+            <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
+                <div className="container mx-auto flex justify-between items-center">
+                    <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+                        <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
+                        <span className="text-2xl font-bold">DDSoft</span>
+                    </Link>
                     <nav className="hidden md:flex flex-grow justify-center">
                         <div className="relative group">
                             <button className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200">
@@ -208,7 +227,7 @@ export default function AgentList() {
                                             <div className="absolute left-full top-0 mt-0 ml-1 w-48 opacity-0 invisible group-hover/item:opacity-100 group-hover/item:visible transition-all duration-200 ease-in-out">
                                                 <div className="bg-white dark:bg-gray-800 rounded-md shadow-lg py-1">
                                                     {item.subItems.map((subItem, subIndex) => (
-                                                        <Link 
+                                                        <Link
                                                             key={subIndex}
                                                             href={subItem.link}
                                                             className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -223,7 +242,7 @@ export default function AgentList() {
                                 </div>
                             </div>
                         </div>
-                    </nav>                    
+                    </nav>
                     <div className="flex items-center space-x-4">
                         <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-white/20 transition-colors duration-200" aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
                             {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
@@ -238,8 +257,33 @@ export default function AgentList() {
             <main className="flex-grow bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
                 <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
                     <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                        <div className="bg-gray-200 dark:bg-gray-700 px-6 py-4">
+                    <div className="bg-gray-200 dark:bg-gray-700 px-6 py-4 flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Agent List</h1>
+                            <div className="flex w-1/2">
+                                <input
+                                    type="text"
+                                    placeholder="Search by Agent Name"
+                                    value={searchQuery}
+                                    onChange={(e) => {
+                                        setSearchQuery(e.target.value)
+                                        if (e.target.value === '') {
+                                            setFilteredAgentList(agentList)
+                                        }
+                                    }}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSearch()
+                                        }
+                                    }}
+                                    className="flex-grow border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                />
+                                <button
+                                    onClick={handleSearch}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700"
+                                >
+                                    <Search className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
                         <div className="px-6 py-4">
                             <table className="min-w-full">
@@ -250,7 +294,7 @@ export default function AgentList() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {agentList.map((agent, index) => (
+                                    {filteredAgentList.map((agent, index) => (
                                         <tr key={agent.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                                             <td className="border-b border-gray-300 px-4 py-2">{index + 1}</td>
                                             <td className="border-b border-gray-300 px-4 py-2">

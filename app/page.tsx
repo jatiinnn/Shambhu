@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Moon, Sun, ChevronDown, ChevronRight, Menu } from 'lucide-react'
+import { Moon, Sun, ChevronDown, ChevronRight, Menu, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { auth } from '../firebase/config'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
-import { link } from 'fs'
 
 export default function Dashboard() {
   const [theme, setTheme] = useState('light')
@@ -108,13 +107,18 @@ export default function Dashboard() {
   return (
     <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
       <header className="bg-gradient-to-r from-gray-800 to-gray-900 p-4 text-white">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-            <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
-            <span className="text-2xl font-bold">DDSoft</span>
-          </Link>
+        <div className="w-full max-w-7xl mx-auto flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+            <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
+              <ArrowLeft size={24} />
+            </button>
+            <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+              <Image src="/logo.png" alt="DDSoft Logo" width={40} height={40} />
+              <span className="text-2xl font-bold">DDSoft</span>
+            </Link>
+          </div>
           <nav className="flex-grow flex justify-center">
-            <ul className="flex space-x-4">
+            <ul className="flex space-x-8">
 
               {/* Master menu */}
               <li className="relative group">
@@ -219,6 +223,43 @@ export default function Dashboard() {
                   </li>
                 </ul>
               </li>
+
+              {/* Job Work menu  */}
+              <li className="relative group">
+                <div
+                  className="flex items-center space-x-1 cursor-pointer transition-all duration-300 ease-in-out transform group-hover:scale-105"
+                >
+                  <span>Job Work</span>
+                  <ChevronDown size={16} />
+                </div>
+                <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/issue-for-job"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Issue for Job
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/receive-from-return"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Receive from Job
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/balance"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Balance
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Link
+                      href="/job-work-bill"
+                      className="block font-semibold text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray dark:hover:text-white">Job Work Bill Order
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
 
               {/* Report menu  */}
               <li className="relative group">
@@ -366,16 +407,36 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <footer className="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-8">
-        <div className="container mx-auto text-center px-4">
-          <h3 className="text-2xl font-bold mb-4">About Us</h3>
-          <p className="mb-4 max-w-2xl mx-auto">
-            We are a company dedicated to providing efficient and user-friendly management solutions for businesses of all sizes.
-            Our Dashboard App is designed to streamline your operations and improve productivity.
-          </p>
-          <p>
-            &copy; {new Date().getFullYear()} Dashboard App. All rights reserved.
-          </p>
+      <footer className="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-6 sm:py-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">About DDSoft</h3>
+              <p className="text-sm sm:text-base mb-4">
+                DDSoft is a comprehensive billing software solution designed to streamline your business operations. 
+                Our software offers powerful features for invoice management, inventory tracking, and financial reporting.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">Key Features</h3>
+              <ul className="list-disc list-inside text-sm sm:text-base">
+                <li>Easy invoice generation</li>
+                <li>Real-time inventory management</li>
+                <li>Comprehensive financial reports</li>
+                <li>Multi-user support</li>
+                <li>Secure data storage</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">Contact Us</h3>
+              <p className="text-sm sm:text-base">Email: support@ddsoft.com</p>
+              <p className="text-sm sm:text-base">Phone: +1 (555) 123-4567</p>
+              <p className="text-sm sm:text-base">Address: 123 Business St, Tech City, TC 12345</p>
+            </div>
+          </div>
+          <div className="mt-6 sm:mt-8 text-center">
+            <p className="text-sm sm:text-base">&copy; {new Date().getFullYear()} DDSoft Billing Software. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>

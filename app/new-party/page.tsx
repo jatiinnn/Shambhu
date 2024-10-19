@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { ChevronDown, Moon, Sun, Menu } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { collection, addDoc } from 'firebase/firestore'
+import { db } from '../../firebase/config'
 
 export default function NewParty() {
-  const router = useRouter()
+  // const router = useRouter()
   const [theme, setTheme] = useState('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -48,11 +50,83 @@ export default function NewParty() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Here you would typically send the data to your backend
+    try {
+      // Validate phone number
+      const phoneRegex = /^[6-9]\d{9}$/
+      if (!phoneRegex.test(formData.phoneNo)) {
+        alert('Please enter a valid 10-digit Indian mobile number')
+        return
+      }
+
+      // Convert phone number to string
+      const partyData = {
+        ...formData,
+        phoneNo: formData.phoneNo.toString()
+      }
+
+      // Save to Firebase
+      await addDoc(collection(db, 'Party'), partyData)
+
+      // Reset form
+      setFormData({
+        code: '',
+        partyName: '',
+        group: '',
+        address: '',
+        city: '',
+        state: '',
+        phoneNo: '',
+        email: '',
+        agent: '',
+        gst: '',
+        transport: '',
+        openingType1: '',
+        openingDate1: '',
+        openingBalance1: '',
+        discount1: '',
+        closingBalance: '',
+        openingType2: '',
+        openingDate2: '',
+        openingBalance2: '',
+        discount2: '',
+        privateMarka: ''
+      })
+
+      alert('Party details saved successfully!')
+    } catch (error) {
+      console.error('Error saving party details:', error)
+      alert('An error occurred while saving party details')
+    }
   }
+
+  const handleCancel = () => {
+    setFormData({
+      code: '',
+      partyName: '',
+      group: '',
+      address: '',
+      city: '',
+      state: '',
+      phoneNo: '',
+      email: '',
+      agent: '',
+      gst: '',
+      transport: '',
+      openingType1: '',
+      openingDate1: '',
+      openingBalance1: '',
+      discount1: '',
+      closingBalance: '',
+      openingType2: '',
+      openingDate2: '',
+      openingBalance2: '',
+      discount2: '',
+      privateMarka: ''
+    })
+  }
+
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
@@ -104,6 +178,14 @@ export default function NewParty() {
         { name: 'Transports List', link: '/transports-list' }
       ]
     }
+  ]
+
+  const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana",
+    "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+    "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+    "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
   ]
 
   return (
@@ -349,23 +431,25 @@ export default function NewParty() {
               />
             </div>
             <div>
-              <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                State
-              </label>
-              <div className="relative">
-                <select
-                  id="state"
-                  name="state"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                >
-                  <option value="">--None--</option>
-                  {/* Add state options here */}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  State
+                </label>
+                <div className="relative">
+                  <select
+                    id="state"
+                    name="state"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">--None--</option>
+                    {indianStates.map((state, index) => (
+                      <option key={index} value={state}>{state}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                </div>
               </div>
-            </div>
             <div>
               <label htmlFor="openingType2" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Opening Type 2
@@ -508,7 +592,7 @@ export default function NewParty() {
           <div className="mt-6 flex justify-end space-x-3">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={handleCancel}
               className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:text-white"
             >
               Cancel
@@ -518,12 +602,6 @@ export default function NewParty() {
               className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Save
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              Save & New
             </button>
           </div>
         </form>
