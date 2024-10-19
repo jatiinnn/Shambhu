@@ -6,7 +6,7 @@ import { Moon, Sun, ChevronDown, ChevronRight, Menu, ArrowLeft } from 'lucide-re
 import Link from 'next/link'
 import Image from 'next/image'
 import { auth } from '../firebase/config'
-import { onAuthStateChanged, signOut, User } from 'firebase/auth'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 
 const menuItems = [
   {
@@ -57,7 +57,6 @@ export default function Navbar() {
   const [theme, setTheme] = useState('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -67,10 +66,8 @@ export default function Navbar() {
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser(currentUser)
         setIsAuthenticated(true)
       } else {
-        setUser(null)
         setIsAuthenticated(false)
         router.push('/auth')
       }
